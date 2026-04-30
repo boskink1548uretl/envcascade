@@ -47,6 +47,17 @@ func LoadFile(path string) (EnvMap, error) {
 	return env, nil
 }
 
+// Merge combines one or more EnvMaps into the receiver, with later maps
+// taking precedence over earlier ones. Keys already present in the receiver
+// are overwritten only if the incoming map defines the same key.
+func (e EnvMap) Merge(others ...EnvMap) {
+	for _, other := range others {
+		for k, v := range other {
+			e[k] = v
+		}
+	}
+}
+
 // parseLine splits a line into a key and value on the first '=' character.
 // It trims surrounding whitespace and strips optional surrounding quotes from values.
 func parseLine(line string) (string, string, error) {
