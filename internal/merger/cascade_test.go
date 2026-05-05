@@ -68,3 +68,23 @@ func TestLoadAndMerge_NoLayersError(t *testing.T) {
 		t.Error("expected error for empty config, got nil")
 	}
 }
+
+func TestLoadAndMerge_EmptyFileIsValid(t *testing.T) {
+	baseFile := writeTempEnv(t, "APP_ENV=production\n")
+	emptyFile := writeTempEnv(t, "")
+
+	cfg := merger.CascadeConfig{
+		Layers: []merger.CascadeLayer{
+			{Name: "base", Path: baseFile},
+			{Name: "empty", Path: emptyFile},
+		},
+	}
+
+	res, err := merger.LoadAndMerge(cfg)
+	if err != nil {
+		t.Fatalf("unexpected error for empty layer file: %v", err)
+	}
+	if res.Env["APP_ENV"] != "production" {
+		t.Errorf("expected APP_ENV=production, got %q", res.Env["APP_ENV"])
+	}
+}
