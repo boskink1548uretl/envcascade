@@ -71,6 +71,19 @@ func TestLoadFile_FileNotFound(t *testing.T) {
 	}
 }
 
+func TestLoadFile_EmptyValue(t *testing.T) {
+	path := writeTempEnvFile(t, "EMPTY=\n")
+	env, err := LoadFile(path)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if val, ok := env["EMPTY"]; !ok {
+		t.Error("expected EMPTY key to be present")
+	} else if val != "" {
+		t.Errorf("expected EMPTY value to be empty string, got %q", val)
+	}
+}
+
 func TestStripQuotes(t *testing.T) {
 	cases := []struct{ input, want string }{
 		{`"hello"`, "hello"},
