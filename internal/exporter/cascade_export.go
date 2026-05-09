@@ -29,7 +29,7 @@ func ExportCascade(w io.Writer, files []string, opts ExportOptions) error {
 
 	if opts.Schema != nil {
 		if verrs := validator.Validate(env, opts.Schema); len(verrs) > 0 {
-			return fmt.Errorf("exporter: validation failed: %v", verrs)
+			return fmt.Errorf("exporter: validation failed (%d error(s)): %v", len(verrs), verrs)
 		}
 	}
 
