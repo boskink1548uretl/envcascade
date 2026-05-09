@@ -1,6 +1,8 @@
 package redactor
 
 import (
+	"fmt"
+
 	"github.com/yourorg/envcascade/internal/merger"
 )
 
@@ -14,7 +16,7 @@ func RedactFiles(opts Options, files ...string) (map[string]string, error) {
 
 	merged, err := merger.LoadAndMerge(files...)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("redactor: failed to load and merge files: %w", err)
 	}
 
 	return Redact(merged, opts), nil
