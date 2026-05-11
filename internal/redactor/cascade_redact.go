@@ -7,11 +7,11 @@ import (
 )
 
 // RedactFiles loads and merges the given .env files in order (later files
-// override earlier ones) and returns a redacted copy of the merged map.
-// It is a convenience wrapper around merger.LoadAndMerge + Redact.
+// override earlier ones), then redacts any sensitive keys from the merged
+// result. At least one file path must be provided.
 func RedactFiles(opts Options, files ...string) (map[string]string, error) {
 	if len(files) == 0 {
-		return nil, merger.ErrNoLayers
+		return nil, fmt.Errorf("redactor: at least one file path is required")
 	}
 
 	merged, err := merger.LoadAndMerge(files...)
